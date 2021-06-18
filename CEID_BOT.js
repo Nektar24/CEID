@@ -1,14 +1,21 @@
+// Required to use Discord
 const Discord = require('discord.js');
 const bot = new Discord.Client();
+// Required to save files
 const fs = require('fs');
+// Required information to launch the bot
 const config = require("./config.json");
+// Nodemailer to send emails
 const nodemailer = require('nodemailer');
 const configmail = require('./email.json');
+// SHA-256 Encryption by https://github.com/Caligatio/jsSHA
 const jsSHA = require("jssha");
+// Files saved to check for duplicate accounts (encrypted)
 let codes = require("./verification_data_1.json");
 let peopleregistered = require("./verification_data_2.json");
 let registeredams = require("./verification_data_3.json");
 
+// Nodemailer functions to send email
 const transporter = nodemailer.createTransport({
     service: configmail.service,
     auth: {
@@ -33,6 +40,7 @@ bot.on('ready',  () => {
     setupslashcommands();
 })
 
+// Functions to send some funny commands
 bot.on('message', message => {
     if (message.channel.type != "dm") {
         if (message.author.bot) {return;}
@@ -57,7 +65,7 @@ async function react_with_thumbs(message){
     }
 }
 
-
+// Initialize the commands (only needs to be done 1 time)
 async function setupslashcommands(){
 
     await getApp(config.ceid_server).commands.get();
@@ -91,6 +99,7 @@ async function setupslashcommands(){
     });
 }
 
+// This code is called everytime someone uses 1 command
 bot.ws.on("INTERACTION_CREATE",async (interaction) => {
     let command = interaction.data.name.toLowerCase();
     let user = interaction.member.user;
