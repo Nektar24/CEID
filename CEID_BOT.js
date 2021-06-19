@@ -14,6 +14,7 @@ const jsSHA = require("jssha");
 let codes = require("./verification_data_1.json");
 let peopleregistered = require("./verification_data_2.json");
 let registeredams = require("./verification_data_3.json");
+let blacklist = require("./blacklist.json");
 
 // Nodemailer functions to send email
 const transporter = nodemailer.createTransport({
