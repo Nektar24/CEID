@@ -109,48 +109,69 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
     switch (command){
         case "getcode":
             save();
-            let AM = interaction.data.options[0].value.toString();
+            let mail = interaction.data.options[0].value.toString().toLocaleLowerCase();
             let shaObj_ΑΜ = new jsSHA("SHA-256", "TEXT", config.salt);
-            shaObj_ΑΜ.update(AM);
+            shaObj_ΑΜ.update(mail);
             let AM_HASHED = shaObj_ΑΜ.getHash("HEX");
-            if (AM.length === 7) {
-                if (peopleregistered[user_id_hashed] && peopleregistered[user_id_hashed].registered){
-                    reply(interaction,"Έχεις ήδη κάνει register");
-                    return;
-                }
-                
-                if (peopleregistered[user_id_hashed] && peopleregistered[user_id_hashed].send_mail_tries > 3){
-                    reply(interaction,"Δεν έχεις άλλες Προσπάθειες , Παρακαλώ επικοινώνισε με τους διαχειριστές.");
-                    return;
-                }
-                if (!peopleregistered[user_id_hashed]) {
-                    peopleregistered[user_id_hashed] = {
-                        am : AM_HASHED,
-                        code : null ,
-                        tries : 0 ,
-                        send_mail_tries : 0,
-                        registered : false
-                    };
-                }else{peopleregistered[user_id_hashed].send_mail_tries++;}
+            if (peopleregistered[user_id_hashed] && peopleregistered[user_id_hashed].registered){
+                reply(interaction,"Έχεις ήδη κάνει register");
+                return;
+            }
+            
+            if (peopleregistered[user_id_hashed] && peopleregistered[user_id_hashed].send_mail_tries > 3){
+                reply(interaction,"Δεν έχεις άλλες Προσπάθειες , Παρακαλώ επικοινώνισε με τους διαχειριστές.");
+                bot.guilds.cache.get(config.ceid_server).members.fetch(user.id).then(member=>{
+                    log(member,config.verification_failed_logs,"#ff0000",`Σπαμμαρε , οπότε κλειδώθηκε`);
+                });
+                return;
+            }
 
-                if (registeredams.includes(AM_HASHED)){
-                    reply(interaction,"Αυτος ο ΑΜ έχει ήδη μπεί στον server. Δικαιούσε 1 account ανα φοιτητή. Παρακαλώ επικοινώνησε με τους διαχειριστές για τυχόν πρόβλημα.");
-                    return;
-                }
+            if (/[^0-9]/.test(mail)){
+                reply(interaction,"Invalid mail");
+                return;
+            }
 
-                reply(interaction,"Στέλνουμε μήνυμα στην διεύθυνση `st" + AM + "@ceid.upatras.gr` ... \nΤσέκαρε το στην ιστοσελίδα https://webmail.ceid.upatras.gr/ για να το δείς πιο γρήγορα (στο gmail αργει να έρθει)");
+            if (!peopleregistered[user_id_hashed]) {
+                peopleregistered[user_id_hashed] = {
+                    am : AM_HASHED,
+                    code : null ,
+                    tries : 0 ,
+                    send_mail_tries : 0,
+                    registered : false
+                };
+            }else{peopleregistered[user_id_hashed].send_mail_tries++;}
 
-                do {
-                    num = Math.floor(Math.random() * 10000) + 1;
-                } while (codes[num]);
-                codes[num] = user_id_hashed;
-                peopleregistered[user_id_hashed].code = num;
+            if (blacklist.includes(mail)){
+                reply(interaction,"-_-");
+                return;
+            }
 
-                let text = `Γεια ${user.username}#${user.discriminator}!\n\nΟ κωδικός σου είναι ο : " ${num} ".\n\nΠαρακαλώ γράψε "/verify ${num}" για να δεις τον υπόλοιπο server\n\nΑν δεν γνωρίζεις τι είναι αυτό το email τότε κάποιος χρησιμοποίησε τον AM σου στον Discord Server μας. Παρακαλώ αγνόησε αυτό το email.`;
+            if (!(/[^a-zA-Z0-9]/.test(mail))){
+                reply(interaction,"Character not allowed.");
+                return;
+            }
 
-                transporter.sendMail(getMailOptions(AM,text), function (err, info) {if(err){console.log(err);}});
+            if (mail.length <= 4 || mail.length >= 30){
+                reply(interaction,"Invalid mail");
+                return;
+            }
 
-            } else {reply(interaction,"Σφάλμα. Παρακαλώ Γράψε μόνο το ΑΜ σου (χωρις up ή st ή @ceid). Αν Είσαι παλιός πρέπει να γράψεις το καινούργιο ΑΜ σου.\n\nΠροσπάθησε ξανά.");}
+            if (registeredams.includes(AM_HASHED)){
+                reply(interaction,"Αυτο το ΑΜ εχει ηδη χρησιμοποιηθεί στον server. Δικαιούσε 1 account ανα φοιτητή. Παρακαλώ επικοινώνησε με τους διαχειριστές για τυχόν πρόβλημα.");
+                return;
+            }
+
+            reply(interaction,"Στέλνουμε μήνυμα στην διεύθυνση `" + mail + "@ceid.upatras.gr` ... \nΤσέκαρε το στην ιστοσελίδα https://webmail.ceid.upatras.gr/ για να το δείς πιο γρήγορα (στο gmail αργει να έρθει)");
+
+            do {
+                num = Math.floor(Math.random() * 10000) + 1;
+            } while (codes[num]);
+            codes[num] = user_id_hashed;
+            peopleregistered[user_id_hashed].code = num;
+
+            let text = `Γεια ${user.username}#${user.discriminator}!\n\nΟ κωδικός σου είναι ο : " ${num} ".\n\nΠαρακαλώ γράψε "/verify ${num}" για να δεις τον υπόλοιπο server\n\nΑν δεν γνωρίζεις τι είναι αυτό το email τότε κάποιος χρησιμοποίησε τον AM σου στον Discord Server μας. Παρακαλώ αγνόησε αυτό το email.`;
+
+            transporter.sendMail(getMailOptions(mail,text), function (err, info) {if(err){console.log(err);}});
         break;
         case "verify":
             save();
@@ -166,12 +187,16 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
                     if (member.roles.cache.some(role => role.id === config.muterole)) {return;}
                     if (!member.roles.cache.some(role => role.id === config.ceidas)) {
                         member.roles.add(config.ceidas).catch();
+                        log(member,config.verification_failed_logs,"#800080",`Αποφάσησε να δώσει στον εαυτό του ξανά τον ρολο <@&${config.ceidas}>`);
                     }
                 });
                 return;
             }
             if (peopleregistered[user_id_hashed].tries > tries){
                 reply(interaction,"Δεν έχεις άλλες Προσπάθειες , Παρακαλώ επικοινώνισε με τους διαχειριστές.");
+                bot.guilds.cache.get(config.ceid_server).members.fetch(user.id).then(member=>{
+                    log(member,config.verification_failed_logs,"#ff0000",`Σπαμμαρε , οπότε κλειδώθηκε`);
+                });
                 return;
             }
             if (peopleregistered[user_id_hashed].code === code) {
@@ -184,6 +209,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
                 registeredams.push(peopleregistered[user_id_hashed].am);
                 bot.guilds.cache.get(config.ceid_server).members.fetch(user.id).then(member=>{
                     member.roles.add(config.ceidas).catch();
+                    log(member,config.verification_logs,"#0000FF",`Επαλήθευσε τον λογαριασμό του και έλαβε τον ρόλο <@&${config.ceidas}>.`);
                 });
                 return;
             }
