@@ -26,9 +26,9 @@ const transporter = nodemailer.createTransport({
         rejectUnauthorized: false
     }
 });
-const getMailOptions = (AM,text) => ({
+const getMailOptions = (front,text) => ({
     from: configmail.user,
-    to: "st" + AM + "@ceid.upatras.gr",
+    to: front + "@ceid.upatras.gr",
     subject: 'C.E.I.D. Discord Server',
     text: text
 });
