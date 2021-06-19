@@ -128,7 +128,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             }
 
             if (/[^0-9]/.test(mail)){
-                reply(interaction,"Invalid mail");
+                reply(interaction,"Invalid mail (μηπώς ξέχασες να βάλεις 'st' ?)");
                 return;
             }
 
@@ -150,6 +150,18 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             if (!(/[^a-zA-Z0-9]/.test(mail))){
                 reply(interaction,"Character not allowed.");
                 return;
+            }
+
+            let test4 = mail.match(/\d+/g);
+            if (test4){
+                if (test4.join("").length != 7){
+                    reply(interaction,"Invalid mail");
+                    return;
+                }
+                if (!mail.includes("st")){
+                    reply(interaction,"Invalid mail");
+                    return;
+                }
             }
 
             if (mail.length <= 4 || mail.length >= 30){
