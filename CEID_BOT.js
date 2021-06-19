@@ -72,13 +72,13 @@ async function setupslashcommands(){
     await getApp(config.ceid_server).commands.post({
         data : {
             name : "getcode",
-            description : "Γραψε το ΑΜ σου και θα λάβεις έναν κωδικό επιβεβαίωσης στο @ceid.upatras.gr email σου.",
+            description : "Παρακαλώ συμπλήρωσε το @ceid.upatras.gr email σου.",
             options : [
                 {
-                    name : "am",
-                    description : "Γραψε τον ΑΜ σου (μόνο αριθμοί , πχ 1071234).",
+                    name : "mail",
+                    description : "Γραψε το mail σου (μόνο το μπροστά , πχ st1234567). Μην ξεχάσεις να γράψεις st.",
                     required : true,
-                    type : 4
+                    type : 3
                 }
             ]
         }
