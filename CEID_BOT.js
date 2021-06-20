@@ -127,11 +127,6 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
                 return;
             }
 
-            if (/[^0-9]/.test(mail)){
-                reply(interaction,"Invalid mail (μηπώς ξέχασες να βάλεις 'st' ?)");
-                return;
-            }
-
             if (!peopleregistered[user_id_hashed]) {
                 peopleregistered[user_id_hashed] = {
                     am : AM_HASHED,
@@ -147,7 +142,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
                 return;
             }
 
-            if (!(/[^a-zA-Z0-9]/.test(mail))){
+            if ((/[^a-zA-Z0-9]/.test(mail))){
                 reply(interaction,"Character not allowed.");
                 return;
             }
