@@ -77,7 +77,7 @@ async function setupslashcommands(){
             options : [
                 {
                     name : "mail",
-                    description : "Γραψε το mail σου (μόνο το μπροστά , πχ st1234567). Μην ξεχάσεις να γράψεις st.",
+                    description : "Γραψε το mail σου (μόνο το μπροστά, πχ st1234567). Μην ξεχάσεις να γράψεις st.",
                     required : true,
                     type : 3
                 }
@@ -87,7 +87,7 @@ async function setupslashcommands(){
     await getApp(config.ceid_server).commands.post({
         data : {
             name : "verify",
-            description : "Γραψε τον κωδικό επιβεβαίωσης που έλαβες στον @ceid.upatras.gr email σου.",
+            description : "Γράψε τον κωδικό επιβεβαίωσης που έλαβες στον @ceid.upatras.gr email σου.",
             options : [
                 {
                     name : "code",
@@ -120,9 +120,9 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             }
             
             if (peopleregistered[user_id_hashed] && peopleregistered[user_id_hashed].send_mail_tries > 3){
-                reply(interaction,"Δεν έχεις άλλες Προσπάθειες , Παρακαλώ επικοινώνισε με τους διαχειριστές.");
+                reply(interaction,"Δεν έχεις άλλες Προσπάθειες, Παρακαλώ επικοινώνισε με τους διαχειριστές.");
                 bot.guilds.cache.get(config.ceid_server).members.fetch(user.id).then(member=>{
-                    log(member,config.verification_failed_logs,"#ff0000",`Σπαμμαρε , οπότε κλειδώθηκε`);
+                    log(member,config.verification_failed_logs,"#ff0000",`Σπάμμαρε, οπότε κλειδώθηκε`);
                 });
                 return;
             }
@@ -165,7 +165,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             }
 
             if (registeredams.includes(AM_HASHED)){
-                reply(interaction,"Αυτο το ΑΜ εχει ηδη χρησιμοποιηθεί στον server. Δικαιούσε 1 account ανα φοιτητή. Παρακαλώ επικοινώνησε με τους διαχειριστές για τυχόν πρόβλημα.");
+                reply(interaction,"Αυτο το ΑΜ εχει ηδη χρησιμοποιηθεί στον server. Δικαιούσαι 1 account ανα φοιτητή. Παρακαλώ επικοινώνησε με τους διαχειριστές για τυχόν πρόβλημα.");
                 return;
             }
 
@@ -177,7 +177,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             codes[num] = user_id_hashed;
             peopleregistered[user_id_hashed].code = num;
 
-            let text = `Γεια ${user.username}#${user.discriminator}!\n\nΟ κωδικός σου είναι ο : " ${num} ".\n\nΠαρακαλώ γράψε "/verify ${num}" για να δεις τον υπόλοιπο server\n\nΑν δεν γνωρίζεις τι είναι αυτό το email τότε κάποιος χρησιμοποίησε τον AM σου στον Discord Server μας. Παρακαλώ αγνόησε αυτό το email.`;
+            let text = `Γεια ${user.username}#${user.discriminator}!\n\nΟ κωδικός σου είναι ο: "${num}".\n\nΠαρακαλώ γράψε "/verify ${num}" για να δεις τον υπόλοιπο server\n\nΑν δεν γνωρίζεις τι είναι αυτό το email τότε κάποιος χρησιμοποίησε τον AM σου στον Discord Server μας. Παρακαλώ αγνόησε αυτό το email.`;
 
             transporter.sendMail(getMailOptions(mail,text), function (err, info) {if(err){console.log(err);}});
         break;
@@ -186,7 +186,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             let code = interaction.data.options[0].value;
             let tries = 10;
             if (!peopleregistered[user_id_hashed]){
-                reply(interaction,"Παρακαλώ κάνε /getcode πρώτα , συμπληρόνοντας τον ΑΜ σου");
+                reply(interaction,"Παρακαλώ κάνε /getcode πρώτα, συμπληρώνοντας τον ΑΜ σου.");
                 return;
             }
             if (peopleregistered[user_id_hashed] && peopleregistered[user_id_hashed].registered){
@@ -195,13 +195,13 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
                     if (member.roles.cache.some(role => role.id === config.muterole)) {return;}
                     if (!member.roles.cache.some(role => role.id === config.ceidas)) {
                         member.roles.add(config.ceidas).catch();
-                        log(member,config.verification_failed_logs,"#800080",`Αποφάσησε να δώσει στον εαυτό του ξανά τον ρολο <@&${config.ceidas}>`);
+                        log(member,config.verification_failed_logs,"#800080",`Αποφάσισε να δώσει στον εαυτό του ξανά τον ρολο <@&${config.ceidas}>`);
                     }
                 });
                 return;
             }
             if (peopleregistered[user_id_hashed].tries > tries){
-                reply(interaction,"Δεν έχεις άλλες Προσπάθειες , Παρακαλώ επικοινώνισε με τους διαχειριστές.");
+                reply(interaction,"Δεν έχεις άλλες Προσπάθειες, Παρακαλώ επικοινώνισε με τους διαχειριστές.");
                 bot.guilds.cache.get(config.ceid_server).members.fetch(user.id).then(member=>{
                     log(member,config.verification_failed_logs,"#ff0000",`Σπαμμαρε , οπότε κλειδώθηκε`);
                 });
@@ -209,10 +209,10 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             }
             if (peopleregistered[user_id_hashed].code === code) {
                 if (registeredams.includes(peopleregistered[user_id_hashed].am)){
-                    reply(interaction,"Αυτος ο ΑΜ έχει ήδη μπεί στον server. Δικαιούσε 1 account ανα φοιτητή. Παρακαλώ επικοινώνησε με τους διαχειριστές για τυχόν πρόβλημα.");
+                    reply(interaction,"Αυτος ο ΑΜ έχει ήδη μπεί στον server. Δικαιούσαι 1 account ανα φοιτητή. Παρακαλώ επικοινώνησε με τους διαχειριστές για τυχόν πρόβλημα.");
                     return;
                 }
-                reply(interaction,"Επιτυχές Επαλήθευση ! Καλως είρθες στον server !");
+                reply(interaction,"Επιτυχής επαλήθευση! Καλώς ήρθες στον server!");
                 peopleregistered[user_id_hashed].registered = true;
                 registeredams.push(peopleregistered[user_id_hashed].am);
                 bot.guilds.cache.get(config.ceid_server).members.fetch(user.id).then(member=>{
@@ -223,7 +223,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             }
             if (peopleregistered[user_id_hashed].code != code){
                 peopleregistered[user_id_hashed].tries++
-                reply(interaction,`Αυτος δεν είναι ο κωδικός. ${peopleregistered[user_id_hashed].tries}/${tries.toString()} Προσπάθειες`);
+                reply(interaction,`Αυτός δεν είναι ο κωδικός. ${peopleregistered[user_id_hashed].tries}/${tries.toString()} Προσπάθειες`);
             }
         break;
     }
