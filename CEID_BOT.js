@@ -176,6 +176,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
             } while (codes[num]);
             codes[num] = user_id_hashed;
             peopleregistered[user_id_hashed].code = num;
+            peopleregistered[user_id_hashed].am = AM_HASHED;
 
             let text = `Γεια ${user.username}#${user.discriminator}!\n\nΟ κωδικός σου είναι ο: "${num}".\n\nΠαρακαλώ γράψε "/verify ${num}" για να δεις τον υπόλοιπο server\n\nΑν δεν γνωρίζεις τι είναι αυτό το email τότε κάποιος χρησιμοποίησε τον AM σου στον Discord Server μας. Παρακαλώ αγνόησε αυτό το email.`;
 
