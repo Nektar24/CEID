@@ -2,13 +2,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fs = require('fs');
 const config = require("./config.json");
-// --------- UPDATE ------------
 const sendMail = require('./gmail.js');
-// -----------------------------
-// ---------- OLD --------------
-//const nodemailer = require('nodemailer');
-//const configmail = require('./email.json');
-// -----------------------------
 const jsSHA = require("jssha");
 let codes = require("./verification_data_1.json");
 let peopleregistered = require("./verification_data_2.json");
@@ -16,8 +10,6 @@ let registeredams = require("./verification_data_3.json");
 let blacklist = require("./professor_mails.json");
 let muted = require("./muted.json");
 
-
-// --------- UPDATE ------------
 const SendEmail = async (front,text) => {
     const options = {
         to: front + "@ceid.upatras.gr",
@@ -32,29 +24,6 @@ const SendEmail = async (front,text) => {
     const messageId = await sendMail(options);
     return messageId;
 };
-// -----------------------------
-
-// ---------- OLD --------------
-/*
-const transporter = nodemailer.createTransport({
-    service: configmail.service,
-    auth: {
-           user: configmail.user,
-           pass: configmail.password
-    },
-    tls: {
-        rejectUnauthorized: false
-    }
-});
-
-const getMailOptions = (front,text) => ({
-    from: configmail.user,
-    to: front + "@ceid.upatras.gr",
-    subject: 'C.E.I.D. Discord Server',
-    text: text
-});
-*/
-// -----------------------------
 
 var args;
 
@@ -292,12 +261,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
 
             let text = `Γεια ${user.username}#${user.discriminator}!\n\nΟ κωδικός σου είναι ο : " ${num} ".\n\nΠαρακαλώ γράψε "/verify ${num}" για να δεις τον υπόλοιπο server\n\nΑν δεν γνωρίζεις τι είναι αυτό το email τότε κάποιος χρησιμοποίησε τον AM σου στον Discord Server μας. Παρακαλώ αγνόησε αυτό το email.`;
 
-            // --------- UPDATE ------------
             SendEmail(mail,text).then((messageId) => console.log('Message sent successfully:', messageId)).catch((err) => console.error(err));
-            // -----------------------------
-            // ---------- OLD --------------
-            //transporter.sendMail(getMailOptions(mail,text), function (err, info) {if(err){console.log(err);}});
-            // -----------------------------
         break;
         case "verify":
             save();
