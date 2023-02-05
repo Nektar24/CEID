@@ -240,7 +240,7 @@ bot.ws.on("INTERACTION_CREATE",async (interaction) => {
                 }
             }
 
-            if (mail.length <= 3 || mail.length >= 30){
+            if (mail.length <= 2 || mail.length >= 30){
                 reply(interaction,"Invalid mail");
                 return;
             }
